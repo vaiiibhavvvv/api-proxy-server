@@ -24,7 +24,7 @@ This is a Node.js project that acts as a proxy server for external APIs, impleme
 
 1. Clone the repository:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/vaiiibhavvvv/api-proxy-server
    cd api-proxy-server
    ```
 
