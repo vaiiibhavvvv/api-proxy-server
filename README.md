@@ -12,16 +12,6 @@ This is a Node.js project that acts as a proxy server for external APIs, impleme
 - Logging: Logs each request with timestamp, IP address, and rate limit status.
 - Authentication: Simple token-based authentication for the proxy endpoint.
 
-## Project Structure
-
-api-proxy-server/
-│
-├── .env                 # Environment variables
-├── index.js             # Main server file
-└── routes/
-    ├── auth.js          # Authentication middleware
-    └── weather.js       # Weather API route
-
 
 ## Setup
 
