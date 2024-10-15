@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import router from './routes/weather.js';
 import rateLimit from 'express-rate-limit';
 import apicache from 'apicache';
+import morgan from 'morgan';
 import { authenticate } from './routes/auth.js';
 
 
@@ -24,14 +25,26 @@ app.use(cors());
 const limiter = rateLimit({
   windowMs: RATE_LIMIT_WINDOW_MS, // Window for rate limit
   max: RATE_LIMIT_MAX, // Maximum requests per windowMs
-  message: "Too many requests, please try again later.", 
+ statusCode: 429,
+  handler: (req,res,next) =>{
+    res.status(429).json({
+      success: false,
+      message: "Too many requests, please try again later."
+    });
+    // Log rate limit exceeded
+    console.log(`Rate limit exceeded for IP: ${req.ip} at ${new Date().toISOString()}`);
+  }
+  
 });
 
 // Apply rate limiter to all requests
 app.use(limiter);
 
-// Trust the first proxy if the app is behind a reverse proxy (e.g., nginx)
-app.set('trust proxy', 1);
+// Log all requests using morgan
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :remote-addr - :date[iso]'));
+
+// Trust the first proxy if the app is behind a reverse proxy 
+ app.set('trust proxy', 1);
 
 // Initialize cache with configurable duration
 const cache = apicache.middleware;

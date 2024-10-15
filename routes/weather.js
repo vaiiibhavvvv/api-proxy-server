@@ -2,26 +2,24 @@ import express from 'express';
 import needle from 'needle';
 import url from 'url';
 import apicache from 'apicache';
-
-
+import dotenv from 'dotenv';
 const router = express.Router();
 
+dotenv.config();
+
 // Load environment variables
-// const { API_BASE_URL, API_KEY_NAME, API_KEY_VALUE } = process.env;
- const API_BASE_URL = "https:api.openweathermap.org/data/2.5/weather"
- const API_KEY_NAME = "proxy_server"
- const API_KEY_VALUE = "50827a6061b0d47b96795c8b51f3611b"
+ const { API_BASE_URL, API_KEY_NAME, API_KEY_VALUE, CACHE_DURATION, AUTH_TOKEN } = process.env;
 
 console.log('API_BASE_URL:', API_BASE_URL);
 console.log('API_KEY_NAME:', API_KEY_NAME);
 console.log('API_KEY_VALUE:', API_KEY_VALUE);
 
-//Init cache
-let cache = apicache.middleware
+//Initialize cache
+const cache = apicache.middleware;
 
 
 // Define the GET route
-router.get('/', cache('5 minutes'), async (req, res) => {
+router.get('/', cache(CACHE_DURATION || '5 minutes'), async (req, res) => {
   try {
 
     const params = new URLSearchParams({
